@@ -65,12 +65,12 @@ def collided_left(co1, co2):
 
 def collided_right(co1, co2):
     if within_y(co1, co2):
-        if co1.x1 <= co2.x2 and co1.x1 >= co2.x1:
+        if co1.x2 >= co2.x1 and co1.x2 <= co2.x2:
             return True
     return False
 
 def collided_top(co1, co2):
-    if within_y(co1, co2):
+    if within_x(co1, co2):
         if co1.y1 <= co2.y2 and co1.y1 >= co2.y1:
             return True
     return False
@@ -173,7 +173,7 @@ class StickFigureSprite(Sprite):
 
 
     def coords(self):
-        xy = self.game.canvas.coords(self.image)
+        xy = list(self.game.canvas.coords(self.image))
         self.coordinates.x1 = xy[0]
         self.coordinates.y1 = xy[1]
         self.coordinates.x2 = xy[0] + 27
@@ -228,17 +228,17 @@ class StickFigureSprite(Sprite):
             if left and self.x < 0 and collided_left(co, sprite_co):
                 self.x = 0
                 left = False
-            if sprite.endgame:
-                self.game.running = False    
+                if sprite.endgame:
+                    self.game.running = False    
             if right and self.x > 0 and collided_right(co, sprite_co):
                 self.x = 0
                 right = False
                 if sprite.endgame:
                     self.game.running = False    
-            if falling and bottom and self.y == 0 \
-                    and co.y2 < self.game.canvas_height:
-                self.y = 4
-            self.game.canvas.move(self.image, self.x, self.y)
+        if falling and bottom and self.y == 0 \
+            and co.y2 < self.game.canvas_height:
+            self.y = 4
+        self.game.canvas.move(self.image, self.x, self.y)
 
 
 class DoorSprite(Sprite):
